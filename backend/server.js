@@ -12,10 +12,10 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors()); // Permite peticiones desde el Frontend (React)
-app.use(express.json()); // Permite leer JSON en el body de las peticiones
+app.use(cors()); 
+app.use(express.json()); 
 
-// Definición de Rutas (Las crearemos ahora)
+// Definición de Rutas 
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/items', require('./src/routes/itemRoutes'));
 

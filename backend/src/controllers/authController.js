@@ -28,6 +28,23 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  // Similar al registro: buscar email, comparar contraseña con bcrypt.compare(), y devolver JWT
-  // (Te dejo esta parte sencilla para que la implementes o me la pidas si te atascas)
+  try {
+    const { email, password } = req.body;
+
+    // 1. Verificar si el usuario existe
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ error: 'Credenciales inválidas' });
+
+    // 2. Comparar contraseña con la encriptada en BD
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ error: 'Credenciales inválidas' });
+
+    // 3. Generar y devolver el Token JWT
+    const payload = { user: { id: user.id } };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.json({ token, user: { name: user.name, email: user.email } });
+  } catch (error) {
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
 };
