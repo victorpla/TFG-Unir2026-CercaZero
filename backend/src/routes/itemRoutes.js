@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const itemController = require('../controllers/itemController');
-const auth = require('../middleware/authMiddleware');
+const auth = require('../middleware/authMiddleware'); // ¡Aquí definimos auth!
 
-// Endpoint PÚBLICO: Buscar ítems cercanos
+// Ruta pública (cualquiera puede ver el mapa)
 router.get('/nearby', itemController.getNearbyItems);
 
-// Endpoint PRIVADO: Crear un ítem (requiere token JWT)
-// router.post('/', auth, itemController.createItem); // Lo programarás en el controlador
+// Rutas privadas (solo usuarios con sesión iniciada)
+router.post('/', auth, itemController.createItem);
+router.put('/:id/status', auth, itemController.updateItemStatus);
 
 module.exports = router;

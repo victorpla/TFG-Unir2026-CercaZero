@@ -1,29 +1,24 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/Login';
+import HomeMap from './pages/HomeMap';
+import 'leaflet/dist/leaflet.css'; // ¡Obligatorio para que el mapa cargue bien!
 
-// Componentes "Mock" temporales (los sustituiremos por archivos reales en la carpeta pages)
-const Login = () => <h2>Pantalla de Login</h2>;
-const Register = () => <h2>Pantalla de Registro</h2>;
-const HomeMap = () => <h2>🌍 Mapa Principal de CercaZero</h2>;
+// Mock temporal para el registro (para no saturarte de código de golpe)
+const Register = () => <h2 style={{textAlign: 'center'}}>Pantalla de Registro (En construcción)</h2>;
 
 function App() {
-  // Lógica simple para saber si el usuario está logueado
   const isAuthenticated = !!localStorage.getItem('token');
 
   return (
     <Router>
-      <div style={{ padding: '20px', fontFamily: 'system-ui' }}>
-        <h1>CercaZero MVP</h1>
-        
+      <div style={{ padding: '20px', fontFamily: 'system-ui', maxWidth: '900px', margin: '0 auto' }}>
         <Routes>
-          {/* Rutas Públicas */}
-          <Route path="/login" element={<Login />} />
+          {/* Si está logueado y va al login, lo mandamos al mapa */}
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
           <Route path="/register" element={<Register />} />
-
-          {/* Ruta Privada (El Mapa) */}
-          <Route 
-            path="/" 
-            element={isAuthenticated ? <HomeMap /> : <Navigate to="/login" />} 
-          />
+          
+          {/* Si NO está logueado y va al mapa, lo mandamos al login */}
+          <Route path="/" element={isAuthenticated ? <HomeMap /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
