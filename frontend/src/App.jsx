@@ -1,10 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import HomeMap from './pages/HomeMap';
+import Register from './components/Register'; // <-- Añadimos el import real de tu componente
 import 'leaflet/dist/leaflet.css'; // ¡Obligatorio para que el mapa cargue bien!
-
-// Mock temporal para el registro (para no saturarte de código de golpe)
-const Register = () => <h2 style={{textAlign: 'center'}}>Pantalla de Registro (En construcción)</h2>;
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -15,6 +13,8 @@ function App() {
         <Routes>
           {/* Si está logueado y va al login, lo mandamos al mapa */}
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
+          
+          {/* Aquí ya estamos usando el componente real de Registro */}
           <Route path="/register" element={<Register />} />
           
           {/* Si NO está logueado y va al mapa, lo mandamos al login */}

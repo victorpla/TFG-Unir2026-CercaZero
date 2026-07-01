@@ -3,7 +3,7 @@ TFG - Grado en Ingeniería Informática - UNIR 2025/2026
 
 
 # CercaZero 
-**Plataforma web distribuida para el fomento de la economía circular vecinal.**
+**Plataforma web para el fomento de la economía circular vecinal.**
 
 > **Contexto Académico:** Proyecto en desarrollo como Trabajo Fin de Grado (TFG) para el Curso de Adaptación al Grado en Ingeniería Informática de la UNIR.
 
