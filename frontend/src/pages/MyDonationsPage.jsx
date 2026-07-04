@@ -7,7 +7,7 @@ import api from "../services/api";
 import { normalizeItemsResponse } from "../services/itemsService";
 
 /**
- * Endpoint confirmado por Victor: GET /api/items/me (protegido).
+ * GET /api/items/me (protegido).
  * Devuelve los ítems publicados por el usuario autenticado.
  */
 export default function MyDonationsPage() {
