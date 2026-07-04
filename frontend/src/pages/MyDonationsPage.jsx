@@ -7,10 +7,8 @@ import api from "../services/api";
 import { normalizeItemsResponse } from "../services/itemsService";
 
 /**
- * NOTA: la colección de Postman no incluye un listado de "mis donaciones".
- * Se asume aquí GET /api/items/mine (protegido) como convención razonable
- * — ajusta esta llamada al endpoint real que exponga el backend para
- * listar los items del usuario autenticado.
+ * Endpoint confirmado por Victor: GET /api/items/me (protegido).
+ * Devuelve los ítems publicados por el usuario autenticado.
  */
 export default function MyDonationsPage() {
   const { user } = useAuth();
