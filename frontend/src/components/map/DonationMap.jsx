@@ -1,10 +1,12 @@
 import { useEffect, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
+import { Link } from "react-router-dom";
 import L from "leaflet";
-import { Apple, Shirt, Sofa, Boxes, Phone, MapPinOff } from "lucide-react";
+import { Apple, Shirt, Sofa, Boxes, Phone, MapPinOff, Lock } from "lucide-react";
 import Spinner from "../ui/Spinner";
 import StatusBadge from "../donations/StatusBadge";
+import { useAuth } from "../../hooks/useAuth";
 
 const CATEGORY_STYLES = {
   alimentos: { color: "#38875C", Icon: Apple, label: "Alimentos" },
@@ -87,6 +89,7 @@ function MapMoveWatcher({ onBoundsChange }) {
  *  - onSelectItem(item): se dispara al pulsar un marcador
  */
 export default function DonationMap({ center, items = [], isLoading = false, onBoundsChange, onSelectItem }) {
+  const { isAuthenticated } = useAuth();
   const mappableItems = items.filter(
     (item) => item.location?.lat != null && item.location?.lng != null
   );
@@ -137,13 +140,23 @@ export default function DonationMap({ center, items = [], isLoading = false, onB
                   <StatusBadge status={item.status} />
                 </div>
                 {item.contactPhone && (
-                  <a
-                    href={`tel:${item.contactPhone}`}
-                    className="mt-2 flex items-center gap-1 text-xs font-semibold text-primary-700 hover:underline"
-                  >
-                    <Phone size={12} />
-                    {item.contactPhone}
-                  </a>
+                  isAuthenticated ? (
+                    <a
+                      href={`tel:${item.contactPhone}`}
+                      className="mt-2 flex items-center gap-1 text-xs font-semibold text-primary-700 hover:underline"
+                    >
+                      <Phone size={12} />
+                      {item.contactPhone}
+                    </a>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="mt-2 flex items-center gap-1 text-xs font-semibold text-primary-900/40 hover:text-primary-600"
+                    >
+                      <Lock size={12} />
+                      Inicia sesión para ver el contacto
+                    </Link>
+                  )
                 )}
               </div>
             </Popup>
