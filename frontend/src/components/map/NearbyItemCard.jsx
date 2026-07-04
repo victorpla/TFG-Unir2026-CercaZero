@@ -38,10 +38,14 @@ export default function NearbyItemCard({ item, onClick }) {
 
       {item.contactPhone && (
         isAuthenticated ? (
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary-600">
+          <a
+            href={`tel:${item.contactPhone}`}
+            className="inline-flex items-center gap-1 text-xs font-semibold text-primary-600 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Phone size={11} />
             {item.contactPhone}
-          </span>
+          </a>
         ) : (
           <Link
             to="/login"
