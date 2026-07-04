@@ -100,3 +100,23 @@ exports.updateItemStatus = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar' });
   }
 };
+
+// Endpoint: GET /api/items/me
+exports.getMyItems = async (req, res) => {
+  try {
+    // Buscamos todos los ítems donde el donorId coincida con el usuario del token JWT
+    // .sort({ createdAt: -1 }) los ordena para que los más recientes salgan primero
+    const myItems = await Item.find({ donorId: req.user.id })
+                              .sort({ createdAt: -1 })
+                              .lean(); 
+
+    res.status(200).json({ 
+      count: myItems.length, 
+      data: myItems 
+    });
+    
+  } catch (error) {
+    console.error('Error al recuperar las donaciones del usuario:', error);
+    res.status(500).json({ error: 'Error interno al recuperar tus objetos' });
+  }
+};

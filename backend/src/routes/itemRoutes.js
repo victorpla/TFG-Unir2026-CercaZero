@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const itemController = require('../controllers/itemController');
-const auth = require('../middleware/authMiddleware'); // ¡Aquí definimos auth!
+const authMiddleware = require('../middleware/authMiddleware'); // Tu middleware de JWT
 
-// Ruta pública (cualquiera puede ver el mapa)
+// 1. Rutas específicas primero
 router.get('/nearby', itemController.getNearbyItems);
+router.get('/me', authMiddleware, itemController.getMyItems);
 
-// Rutas privadas (solo usuarios con sesión iniciada)
-router.post('/', auth, itemController.createItem);
-router.put('/:id/status', auth, itemController.updateItemStatus);
+// 2. Rutas raíz
+router.post('/', authMiddleware, itemController.createItem);
+
+// 3. Rutas con parámetros dinámicos (:id) al final
+router.put('/:id/status', authMiddleware, itemController.updateItemStatus);
 
 module.exports = router;

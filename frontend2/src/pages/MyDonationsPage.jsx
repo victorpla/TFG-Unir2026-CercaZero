@@ -20,7 +20,7 @@ export default function MyDonationsPage() {
   useEffect(() => {
     const fetchMine = async () => {
       try {
-        const { data } = await api.get("/items/mine");
+        const { data } = await api.get("/items/me");
         setItems(normalizeItemsResponse(data));
       } catch {
         setItems([]);
