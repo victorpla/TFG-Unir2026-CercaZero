@@ -7,6 +7,14 @@ const itemSchema = new mongoose.Schema({
   category: { type: String, required: true },
   expirationDate: { type: Date },
   
+  // 1. Teléfono de contacto en la raíz del modelo
+  contactPhone: {
+    type: String,
+    required: [true, 'El teléfono de contacto es obligatorio'],
+    trim: true
+  },
+  
+  // 2. Estructura GeoJSON pura para la localización
   exactLocation: {
     type: {
       type: String,

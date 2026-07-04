@@ -1,0 +1,58 @@
+/* Leaflet requiere sus estilos base para pintar tiles y controles
+   correctamente. Debe importarse ANTES que @tailwind (regla CSS: @import
+   solo puede ir precedido de @charset o comentarios). */
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Zona segura para dispositivos con notch / gestos inferiores */
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Marcador personalizado de donación en el mapa (ver DonationMap.jsx) */
+.donation-marker {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 1rem !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: 220px !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff;
+}

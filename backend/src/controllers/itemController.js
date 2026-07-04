@@ -23,17 +23,25 @@ exports.getNearbyItems = async (req, res) => {
         }
       },
       status: 'AVAILABLE'
-    })
-    .lean(); // .lean() mejora el rendimiento porque devuelve JS objects puros
+    }).lean(); // .lean() devuelve JS objects puros
 
-    // PRIVACY BY DESIGN: Ofuscación de datos antes de enviar al cliente
+    // Procesamiento de los ítems antes de enviarlos
     const safeItems = items.map(item => {
-      // 1. Eliminamos la ubicación exacta para que nadie sepa dónde vive el donante
-      delete item.exactLocation; 
+      // 1. Extraemos las coordenadas (MongoDB usa [longitud, latitud])
+      const itemLng = item.exactLocation.coordinates[0];
+      const itemLat = item.exactLocation.coordinates[1];
+
+      // 2. Creamos los campos que tu frontend (normalizeItem) espera leer
+      item.lat = itemLat;
+      item.lng = itemLng;
+
+      // 3. PRIVACY BY DESIGN: Eliminamos el objeto exactLocation original 
+      delete item.exactLocation;
       
-      // 2. (Opcional) Aquí podríamos añadir un cálculo matemático para devolver 
-      // una coordenada falsa desplazada +/- 200 metros para pintar en el mapa. En caso de ser necesario se implementará en fases posteriores.
-      
+      // Nota para tu TFG: Si en el futuro quieres ofuscar la ubicación 
+      // para que no sea exacta, este es el punto exacto donde deberías 
+      // sumarle o restarle unos decimales aleatorios a item.lat e item.lng.
+
       return item;
     });
 
@@ -51,13 +59,14 @@ exports.getNearbyItems = async (req, res) => {
 
 exports.createItem = async (req, res) => {
   try {
-    const { title, description, category, lng, lat } = req.body;
+    const { title, description, category, lng, lat, contactPhone } = req.body;
 
     const newItem = new Item({
       title,
       description,
       category,
-      donorId: req.user.id, // Obtenido del token JWT a través del middleware
+      donorId: req.user.id, 
+      contactPhone,
       exactLocation: {
         type: 'Point',
         coordinates: [parseFloat(lng), parseFloat(lat)]
@@ -67,6 +76,7 @@ exports.createItem = async (req, res) => {
     await newItem.save();
     res.status(201).json({ message: 'Objeto publicado con éxito', item: newItem });
   } catch (error) {
+    console.error("Fallo al crear el item:", error);
     res.status(500).json({ error: 'Error al publicar el objeto' });
   }
 };
